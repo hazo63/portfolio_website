@@ -11,39 +11,34 @@ const Contact = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".contact-inner", {
-        scrollTrigger: { trigger: ref.current, start: "top bottom-=100", toggleActions: "play none none reverse" },
-        opacity: 0,
-        y: 50,
-        duration: 0.8,
-        ease: "power3.out",
-      });
-      gsap.from(".contact-input", {
-        scrollTrigger: { trigger: ref.current, start: "top bottom-=80", toggleActions: "play none none reverse" },
-        opacity: 0,
-        y: 20,
-        duration: 0.5,
-        stagger: 0.1,
-        ease: "power3.out",
-        delay: 0.3,
-      });
-      gsap.from(".contact-social", {
-        scrollTrigger: { trigger: ref.current, start: "top bottom-=60", toggleActions: "play none none reverse" },
-        opacity: 0,
-        y: 20,
-        duration: 0.5,
-        stagger: 0.08,
-        ease: "power3.out",
-        delay: 0.6,
-      });
-      gsap.from(".download-cv-btn", {
-        scrollTrigger: { trigger: ".download-cv-btn", start: "top bottom-=40", toggleActions: "play none none reverse" },
-        opacity: 0,
-        y: 30,
-        duration: 0.6,
-        ease: "power3.out",
-        delay: 0.8,
-      });
+      gsap.fromTo(".contact-inner",
+        { opacity: 0, y: 50 },
+        {
+          scrollTrigger: { trigger: ref.current, start: "top bottom-=100", toggleActions: "play none none none" },
+          opacity: 1, y: 0, duration: 0.8, ease: "power3.out",
+        }
+      );
+      gsap.fromTo(".contact-input",
+        { opacity: 0, y: 20 },
+        {
+          scrollTrigger: { trigger: ref.current, start: "top bottom-=80", toggleActions: "play none none none" },
+          opacity: 1, y: 0, duration: 0.5, stagger: 0.1, ease: "power3.out", delay: 0.3,
+        }
+      );
+      gsap.fromTo(".contact-social",
+        { opacity: 0, y: 20 },
+        {
+          scrollTrigger: { trigger: ref.current, start: "top bottom-=60", toggleActions: "play none none none" },
+          opacity: 1, y: 0, duration: 0.5, stagger: 0.08, ease: "power3.out", delay: 0.6,
+        }
+      );
+      gsap.fromTo(".download-cv-btn",
+        { opacity: 0, y: 30 },
+        {
+          scrollTrigger: { trigger: ".download-cv-btn", start: "top bottom-=40", toggleActions: "play none none none" },
+          opacity: 1, y: 0, duration: 0.6, ease: "power3.out", delay: 0.8,
+        }
+      );
     }, ref);
     return () => ctx.revert();
   }, []);
