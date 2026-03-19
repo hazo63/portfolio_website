@@ -17,6 +17,7 @@ const Navbar = () => {
   const [activeSection, setActiveSection] = useState("");
   const navRef = useRef<HTMLElement>(null);
   const linksRef = useRef<HTMLDivElement>(null);
+  const resumeHref = `${import.meta.env.BASE_URL}MohamedHazem_Resume.pdf`;
 
   // GSAP entrance animation
   useEffect(() => {
@@ -94,7 +95,7 @@ const Navbar = () => {
               );
             })}
             <a
-              href="/MohamedHazem_Resume.pdf"
+              href={resumeHref}
               target="_blank"
               rel="noopener noreferrer"
               className="ml-2 flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold btn-outline-glow focus:outline-none focus:ring-2 focus:ring-ring"
@@ -150,7 +151,7 @@ const Navbar = () => {
               );
             })}
             <a
-              href="/MohamedHazem_Resume.pdf"
+              href={resumeHref}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-4 flex items-center justify-center gap-2 w-64 btn-glow rounded-xl py-3 text-lg font-semibold"

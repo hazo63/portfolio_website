@@ -8,6 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 const Contact = () => {
   const ref = useRef<HTMLDivElement>(null);
   const [submitted, setSubmitted] = useState(false);
+  const resumeHref = `${import.meta.env.BASE_URL}MohamedHazem_Resume.pdf`;
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -121,7 +122,7 @@ const Contact = () => {
         {/* Download CV Button */}
         <div className="download-cv-btn flex justify-center mt-10">
           <a
-            href="/MohamedHazem_Resume.pdf"
+            href={resumeHref}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-outline-glow flex items-center gap-2 px-8 py-4 rounded-xl text-base font-semibold hover:scale-105 active:scale-95 transition-transform w-full sm:w-auto justify-center"
