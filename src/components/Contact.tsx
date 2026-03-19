@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 const Contact = () => {
   const ref = useRef<HTMLDivElement>(null);
   const [submitted, setSubmitted] = useState(false);
-  const resumeHref = `${import.meta.env.BASE_URL}MohamedHazem_Resume.pdf`;
+  const resumeHref = "https://pdflink.to/953c6091/";
 
   useEffect(() => {
     const ctx = gsap.context(() => {
