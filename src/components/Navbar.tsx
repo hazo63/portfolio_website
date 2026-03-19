@@ -17,7 +17,7 @@ const Navbar = () => {
   const [activeSection, setActiveSection] = useState("");
   const navRef = useRef<HTMLElement>(null);
   const linksRef = useRef<HTMLDivElement>(null);
-  const resumeHref = `${import.meta.env.BASE_URL}MohamedHazem_Resume.pdf`;
+  const resumeHref = "https://pdflink.to/953c6091/";
 
   // GSAP entrance animation
   useEffect(() => {
