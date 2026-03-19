@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { LinkedinLogo, GithubLogo } from "@phosphor-icons/react";
+import { LinkedinLogo, GithubLogo, EnvelopeSimple, DownloadSimple } from "@phosphor-icons/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,6 +17,32 @@ const Contact = () => {
         y: 50,
         duration: 0.8,
         ease: "power3.out",
+      });
+      gsap.from(".contact-input", {
+        scrollTrigger: { trigger: ref.current, start: "top bottom-=80", toggleActions: "play none none reverse" },
+        opacity: 0,
+        y: 20,
+        duration: 0.5,
+        stagger: 0.1,
+        ease: "power3.out",
+        delay: 0.3,
+      });
+      gsap.from(".contact-social", {
+        scrollTrigger: { trigger: ref.current, start: "top bottom-=60", toggleActions: "play none none reverse" },
+        opacity: 0,
+        y: 20,
+        duration: 0.5,
+        stagger: 0.08,
+        ease: "power3.out",
+        delay: 0.6,
+      });
+      gsap.from(".download-cv-btn", {
+        scrollTrigger: { trigger: ".download-cv-btn", start: "top bottom-=40", toggleActions: "play none none reverse" },
+        opacity: 0,
+        y: 30,
+        duration: 0.6,
+        ease: "power3.out",
+        delay: 0.8,
       });
     }, ref);
     return () => ctx.revert();
@@ -43,32 +69,71 @@ const Contact = () => {
               type="text"
               placeholder="Name"
               required
-              className="w-full bg-surface border border-foreground/[0.08] rounded-lg px-4 py-3 text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all"
+              className="contact-input w-full bg-surface border border-foreground/[0.08] rounded-lg px-4 py-3 text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all"
             />
             <input
               type="email"
               placeholder="Email"
               required
-              className="w-full bg-surface border border-foreground/[0.08] rounded-lg px-4 py-3 text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all"
+              className="contact-input w-full bg-surface border border-foreground/[0.08] rounded-lg px-4 py-3 text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all"
             />
             <textarea
               placeholder="Message"
               rows={4}
               required
-              className="w-full bg-surface border border-foreground/[0.08] rounded-lg px-4 py-3 text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all resize-none"
+              className="contact-input w-full bg-surface border border-foreground/[0.08] rounded-lg px-4 py-3 text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all resize-none"
             />
-            <button type="submit" className="btn-glow w-full">
+            <button
+              type="submit"
+              className="btn-glow w-full active:scale-95 transition-transform"
+            >
               {submitted ? "Message Sent ✓" : "Let's Build Something"}
             </button>
           </form>
-          <div className="flex items-center justify-center gap-6 mt-8">
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-              <LinkedinLogo size={28} weight="thin" />
-            </a>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-              <GithubLogo size={28} weight="thin" />
+
+          {/* Social Links */}
+          <div className="flex flex-col items-center gap-4 mt-8">
+            <div className="flex items-center gap-6">
+              <a
+                href="https://www.linkedin.com/in/mohamed-hazem"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="contact-social flex items-center gap-2 text-muted-foreground hover:text-primary hover:scale-105 transition-all duration-300"
+              >
+                <LinkedinLogo size={24} weight="regular" />
+                <span className="text-sm">Mohamed Hazem</span>
+              </a>
+              <a
+                href="https://github.com/hazo63"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="contact-social flex items-center gap-2 text-muted-foreground hover:text-primary hover:scale-105 transition-all duration-300"
+              >
+                <GithubLogo size={24} weight="regular" />
+                <span className="text-sm">hazo63</span>
+              </a>
+            </div>
+            <a
+              href="mailto:mdmdss1212@gmail.com"
+              className="contact-social flex items-center gap-2 text-muted-foreground hover:text-primary hover:scale-105 transition-all duration-300"
+            >
+              <EnvelopeSimple size={24} weight="regular" />
+              <span className="text-sm">mdmdss1212@gmail.com</span>
             </a>
           </div>
+        </div>
+
+        {/* Download CV Button */}
+        <div className="download-cv-btn flex justify-center mt-10">
+          <a
+            href="/MohamedHazem_Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-outline-glow flex items-center gap-2 px-8 py-4 rounded-xl text-base font-semibold hover:scale-105 active:scale-95 transition-transform w-full sm:w-auto justify-center"
+          >
+            <DownloadSimple size={22} weight="bold" />
+            Download CV
+          </a>
         </div>
       </div>
     </section>

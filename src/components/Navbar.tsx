@@ -1,62 +1,174 @@
-import { useState } from "react";
-import { List, X } from "@phosphor-icons/react";
+import { useState, useEffect, useRef } from "react";
+import { List, X, User, GraduationCap, Lightning, Certificate, Path, Briefcase, EnvelopeSimple, DownloadSimple } from "@phosphor-icons/react";
+import gsap from "gsap";
 
 const navItems = [
-  { label: "About", href: "#about" },
-  { label: "Skills", href: "#skills" },
-  { label: "Experience", href: "#journey" },
-  { label: "Projects", href: "#projects" },
-  { label: "Contact", href: "#contact" },
+  { label: "About", href: "#about", icon: User },
+  { label: "Education", href: "#education", icon: GraduationCap },
+  { label: "Skills", href: "#skills", icon: Lightning },
+  { label: "Certifications", href: "#certifications", icon: Certificate },
+  { label: "My Journey", href: "#journey", icon: Path },
+  { label: "Projects", href: "#projects", icon: Briefcase },
+  { label: "Contact", href: "#contact", icon: EnvelopeSimple },
 ];
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
+  const navRef = useRef<HTMLElement>(null);
+  const linksRef = useRef<HTMLDivElement>(null);
+
+  // GSAP entrance animation
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(navRef.current, {
+        y: -60,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        delay: 0.2,
+      });
+      if (linksRef.current) {
+        gsap.from(linksRef.current.children, {
+          y: -20,
+          opacity: 0,
+          duration: 0.5,
+          stagger: 0.06,
+          ease: "power3.out",
+          delay: 0.5,
+        });
+      }
+    });
+    return () => ctx.revert();
+  }, []);
+
+  // Scrollspy
+  useEffect(() => {
+    const sectionIds = navItems.map((item) => item.href.replace("#", ""));
+    const handleScroll = () => {
+      const scrollY = window.scrollY + 120;
+      let current = "";
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (el && el.offsetTop <= scrollY) {
+          current = id;
+        }
+      }
+      setActiveSection(current);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleClick = (href: string) => {
+    setOpen(false);
+    const el = document.querySelector(href);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-40 glass-card border-b border-foreground/[0.08] backdrop-blur-xl">
-      <div className="section-container flex items-center justify-between h-16">
-        <a href="#" className="font-semibold text-lg tracking-tight text-foreground">
-          MH<span className="text-primary">.</span>
-        </a>
+    <>
+      <nav
+        ref={navRef}
+        className="fixed top-0 left-0 right-0 z-40 glass-card border-b border-foreground/[0.08] backdrop-blur-xl"
+      >
+        <div className="section-container flex items-center justify-between h-16">
+          <a href="#" className="font-semibold text-lg tracking-tight text-foreground">
+            MH<span className="text-primary">.</span>
+          </a>
 
-        {/* Desktop */}
-        <div className="hidden md:flex items-center gap-8">
-          {navItems.map((item) => (
+          {/* Desktop */}
+          <div ref={linksRef} className="hidden lg:flex items-center gap-1">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeSection === item.href.replace("#", "");
+              return (
+                <button
+                  key={item.href}
+                  onClick={() => handleClick(item.href)}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-ring ${
+                    isActive
+                      ? "text-primary glow-shadow bg-primary/10"
+                      : "text-muted-foreground hover:text-primary hover:bg-primary/5"
+                  }`}
+                >
+                  <Icon size={16} weight={isActive ? "fill" : "regular"} />
+                  {item.label}
+                </button>
+              );
+            })}
             <a
-              key={item.href}
-              href={item.href}
-              className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
+              href="/MohamedHazem_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-2 flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold btn-outline-glow focus:outline-none focus:ring-2 focus:ring-ring"
             >
-              {item.label}
+              <DownloadSimple size={16} weight="bold" />
+              Download CV
             </a>
-          ))}
+          </div>
+
+          {/* Mobile toggle */}
+          <button
+            onClick={() => setOpen(!open)}
+            className="lg:hidden text-foreground focus:outline-none focus:ring-2 focus:ring-ring rounded-lg p-1"
+            aria-label="Toggle menu"
+          >
+            {open ? <X size={24} /> : <List size={24} />}
+          </button>
         </div>
+      </nav>
 
-        {/* Mobile toggle */}
-        <button
-          onClick={() => setOpen(!open)}
-          className="md:hidden text-foreground"
-        >
-          {open ? <X size={24} /> : <List size={24} />}
-        </button>
-      </div>
-
-      {/* Mobile menu */}
+      {/* Mobile full-screen overlay */}
       {open && (
-        <div className="md:hidden glass-card border-t border-foreground/[0.08] pb-4">
-          {navItems.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              onClick={() => setOpen(false)}
-              className="block px-6 py-3 text-sm text-muted-foreground hover:text-primary transition-colors"
-            >
-              {item.label}
+        <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-2xl flex flex-col lg:hidden">
+          <div className="section-container flex items-center justify-between h-16">
+            <a href="#" className="font-semibold text-lg tracking-tight text-foreground">
+              MH<span className="text-primary">.</span>
             </a>
-          ))}
+            <button
+              onClick={() => setOpen(false)}
+              className="text-foreground focus:outline-none focus:ring-2 focus:ring-ring rounded-lg p-1"
+              aria-label="Close menu"
+            >
+              <X size={24} />
+            </button>
+          </div>
+          <div className="flex-1 flex flex-col items-center justify-center gap-2">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeSection === item.href.replace("#", "");
+              return (
+                <button
+                  key={item.href}
+                  onClick={() => handleClick(item.href)}
+                  className={`flex items-center gap-3 px-6 py-3 rounded-xl text-lg font-medium transition-all duration-300 w-64 ${
+                    isActive
+                      ? "text-primary glow-shadow bg-primary/10"
+                      : "text-muted-foreground hover:text-primary hover:bg-primary/5"
+                  }`}
+                >
+                  <Icon size={22} weight={isActive ? "fill" : "regular"} />
+                  {item.label}
+                </button>
+              );
+            })}
+            <a
+              href="/MohamedHazem_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 flex items-center justify-center gap-2 w-64 btn-glow rounded-xl py-3 text-lg font-semibold"
+            >
+              <DownloadSimple size={22} weight="bold" />
+              Download CV
+            </a>
+          </div>
         </div>
       )}
-    </nav>
+    </>
   );
 };
 
