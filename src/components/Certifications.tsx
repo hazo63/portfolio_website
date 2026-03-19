@@ -30,15 +30,22 @@ const Certifications = () => {
   const [selected, setSelected] = useState<Cert | null>(null);
 
   useEffect(() => {
+    const cards = ref.current?.querySelectorAll(".cert-card");
+    if (!cards || cards.length === 0) return;
+
     const ctx = gsap.context(() => {
-      gsap.from(".cert-card", {
-        scrollTrigger: { trigger: ref.current, start: "top bottom-=100", toggleActions: "play none none reverse" },
-        opacity: 0,
-        scale: 0.9,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: "power3.out",
-      });
+      gsap.fromTo(
+        ".cert-card",
+        { opacity: 0, scale: 0.9 },
+        {
+          scrollTrigger: { trigger: ref.current, start: "top bottom-=100", toggleActions: "play none none none" },
+          opacity: 1,
+          scale: 1,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: "power3.out",
+        }
+      );
     }, ref);
     return () => ctx.revert();
   }, []);
