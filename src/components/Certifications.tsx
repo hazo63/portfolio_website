@@ -1,28 +1,40 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Certificate } from "@phosphor-icons/react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+
+import certHccda from "@/assets/cert-hccda-tech.png";
+import certPython from "@/assets/cert-python-nti.jpg";
+import certArchitecting from "@/assets/cert-cloud-architecting.jpg";
+import certFoundations from "@/assets/cert-cloud-foundations.jpg";
+import certCloudServices from "@/assets/cert-cloud-services.jpg";
+import certCpp from "@/assets/cert-cpp-gdsc.png";
+import certEfset from "@/assets/cert-efset.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const certs = [
-  "AWS Academy Cloud Architecting",
-  "AWS Academy Cloud Foundations",
-  "Huawei HCCDA Tech Essentials",
-  "NTI Python Programming",
-  "NTI Cloud Services Management & Operation",
-  "GDSC C++ Programming",
+  { title: "HCCDA Tech Essentials", org: "Huawei", year: "2025", image: certHccda },
+  { title: "Programming using Python", org: "NTI", year: "2025", image: certPython },
+  { title: "AWS Academy Cloud Architecting", org: "AWS Academy", year: "2025", image: certArchitecting },
+  { title: "AWS Academy Cloud Foundations", org: "AWS Academy", year: "2025", image: certFoundations },
+  { title: "Cloud Services Management & Operation", org: "NTI", year: "2025", image: certCloudServices },
+  { title: "Programming using C++", org: "GDSC", year: "2024", image: certCpp },
+  { title: "EF SET English Certificate (B2)", org: "SmallTalk", year: "2021", image: certEfset },
 ];
+
+type Cert = (typeof certs)[number];
 
 const Certifications = () => {
   const ref = useRef<HTMLDivElement>(null);
+  const [selected, setSelected] = useState<Cert | null>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from(".cert-card", {
         scrollTrigger: { trigger: ref.current, start: "top bottom-=100", toggleActions: "play none none reverse" },
         opacity: 0,
-        y: 40,
+        scale: 0.9,
         duration: 0.6,
         stagger: 0.1,
         ease: "power3.out",
@@ -37,18 +49,52 @@ const Certifications = () => {
         <h2 className="text-2xl sm:text-3xl font-semibold text-foreground mb-12 text-center">
           Certifications
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {certs.map((cert) => (
-            <div
-              key={cert}
-              className="cert-card glass-card glow-border p-5 flex items-start gap-3 hover:glow-shadow transition-shadow duration-300"
+            <button
+              key={cert.title}
+              onClick={() => setSelected(cert)}
+              className="cert-card glass-card glow-border overflow-hidden rounded-xl text-left group hover:glow-shadow transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-ring"
             >
-              <Certificate size={24} className="text-primary shrink-0 mt-0.5" weight="thin" />
-              <span className="text-sm text-foreground/90">{cert}</span>
-            </div>
+              <div className="relative w-full aspect-[16/10] overflow-hidden bg-background/50">
+                <img
+                  src={cert.image}
+                  alt={cert.title}
+                  className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
+              </div>
+              <div className="p-4">
+                <h3 className="text-sm font-semibold text-foreground leading-tight">{cert.title}</h3>
+                <div className="flex items-center justify-between mt-2">
+                  <span className="font-mono-data text-xs text-primary">{cert.org}</span>
+                  <span className="font-mono-data text-xs text-muted-foreground">{cert.year}</span>
+                </div>
+              </div>
+            </button>
           ))}
         </div>
       </div>
+
+      <Dialog open={!!selected} onOpenChange={() => setSelected(null)}>
+        <DialogContent className="max-w-3xl glass-card border-primary/20">
+          <DialogHeader>
+            <DialogTitle className="text-foreground">{selected?.title}</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              {selected?.org} · {selected?.year}
+            </DialogDescription>
+          </DialogHeader>
+          {selected && (
+            <div className="w-full max-h-[70vh] overflow-auto rounded-lg">
+              <img
+                src={selected.image}
+                alt={selected.title}
+                className="w-full h-auto object-contain"
+              />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };

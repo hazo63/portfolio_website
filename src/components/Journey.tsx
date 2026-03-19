@@ -9,9 +9,27 @@ const experiences = [
     title: "Data Engineer Intern",
     company: "DEPI",
     points: [
-      "Built ETL pipelines using Python & SQL",
+      "Built end-to-end ETL pipelines using Python & SQL",
       "Processed big data using Spark & Hadoop",
       "Worked with Azure cloud",
+      "Optimized data quality & database performance",
+    ],
+  },
+  {
+    title: "Big Data Trainee",
+    company: "Huawei",
+    points: [
+      "Learned big data concepts & tools",
+      "Worked with Hadoop & Spark",
+      "Completed hands-on labs",
+    ],
+  },
+  {
+    title: "Tech Essentials Trainee",
+    company: "Huawei",
+    points: [
+      "Learned cloud, networking & IT fundamentals",
+      "Gained knowledge in virtualization & cloud services",
     ],
   },
   {
@@ -19,7 +37,7 @@ const experiences = [
     company: "NTI",
     points: [
       "Designed AWS architectures (EC2, S3, RDS, VPC)",
-      "Implemented high availability solutions",
+      "Implemented high availability & monitoring",
     ],
   },
   {
@@ -28,6 +46,7 @@ const experiences = [
     points: [
       "Data analysis using Pandas & NumPy",
       "Built automation scripts",
+      "Applied OOP concepts",
     ],
   },
 ];
@@ -62,7 +81,7 @@ const Journey = () => {
           <div className="space-y-12">
             {experiences.map((exp, i) => (
               <div
-                key={exp.title}
+                key={exp.title + exp.company}
                 className={`journey-card relative flex flex-col md:flex-row items-center gap-6 ${
                   i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
                 }`}
