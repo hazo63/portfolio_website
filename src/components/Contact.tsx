@@ -90,7 +90,7 @@ const Contact = () => {
           <div className="flex flex-col items-center gap-4 mt-8">
             <div className="flex items-center gap-6">
               <a
-                href="https://www.linkedin.com/in/mohamed-hazem"
+                href="https://www.linkedin.com/in/mohamed-hazem-hegazy-6197b8262"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="contact-social flex items-center gap-2 text-muted-foreground hover:text-primary hover:scale-105 transition-all duration-300"
