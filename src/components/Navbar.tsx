@@ -21,22 +21,15 @@ const Navbar = () => {
   // GSAP entrance animation
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(navRef.current, {
-        y: -60,
-        opacity: 0,
-        duration: 0.8,
-        ease: "power3.out",
-        delay: 0.2,
-      });
+      gsap.fromTo(navRef.current,
+        { y: -60, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, ease: "power3.out", delay: 0.2 }
+      );
       if (linksRef.current) {
-        gsap.from(linksRef.current.children, {
-          y: -20,
-          opacity: 0,
-          duration: 0.5,
-          stagger: 0.06,
-          ease: "power3.out",
-          delay: 0.5,
-        });
+        gsap.fromTo(linksRef.current.children,
+          { y: -20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5, stagger: 0.06, ease: "power3.out", delay: 0.5 }
+        );
       }
     });
     return () => ctx.revert();
