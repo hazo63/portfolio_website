@@ -22,7 +22,7 @@ const Education = () => {
   }, []);
 
   return (
-    <section ref={ref} className="py-20">
+    <section id="education" ref={ref} className="py-20">
       <div className="section-container">
         <h2 className="text-2xl sm:text-3xl font-semibold text-foreground mb-12 text-center">
           Education
