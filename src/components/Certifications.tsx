@@ -10,7 +10,7 @@ import certFoundations from "@/assets/cert-cloud-foundations.jpg";
 import certCloudServices from "@/assets/cert-cloud-services.jpg";
 import certCpp from "@/assets/cert-cpp-gdsc.png";
 import certEfset from "@/assets/cert-efset.png";
-
+import certEfsetEnglish from "@/assets/cert-efset-english.jpg";
 
 gsap.registerPlugin(ScrollTrigger);
 
