@@ -35,11 +35,9 @@ const certs: CertData[] = [
   {
     title: "EF SET English Certificate (B2)",
     org: "EF SET",
-    year: "2024",
+    year: "2021",
     image: certEfsetEnglish,
-    score: "55/100",
     level: "B2 Upper Intermediate",
-    skills: ["Reading (C1)", "Listening (B1)"],
   },
 ];
 
