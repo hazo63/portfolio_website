@@ -91,6 +91,9 @@ const Certifications = () => {
               </div>
               <div className="p-4">
                 <h3 className="text-sm font-semibold text-foreground leading-tight">{cert.title}</h3>
+                {cert.description && (
+                  <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed line-clamp-2">{cert.description}</p>
+                )}
                 {cert.level && (
                   <span className="inline-block mt-2 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase bg-primary/20 text-primary border border-primary/30">
                     {cert.level}
