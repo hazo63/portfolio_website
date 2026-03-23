@@ -10,7 +10,7 @@ import certFoundations from "@/assets/cert-cloud-foundations.jpg";
 import certCloudServices from "@/assets/cert-cloud-services.jpg";
 import certCpp from "@/assets/cert-cpp-gdsc.png";
 import certEfset from "@/assets/cert-efset.png";
-import certEfsetEnglish from "@/assets/cert-efset-english.jpg";
+
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -32,13 +32,6 @@ const certs: CertData[] = [
   { title: "Cloud Services Management & Operation", org: "NTI", year: "2025", image: certCloudServices },
   { title: "Programming using C++", org: "GDSC", year: "2024", image: certCpp },
   { title: "SmallTalk English Speaking Level Test Certificate (B2 – Upper-Intermediate)", org: "SmallTalk", year: "2024", image: certEfset },
-  {
-    title: "EF SET English Certificate (B2)",
-    org: "EF SET",
-    year: "2021",
-    image: certEfsetEnglish,
-    level: "B2 Upper Intermediate",
-  },
 ];
 
 const Certifications = () => {
