@@ -45,7 +45,7 @@ const certs: CertData[] = [
 
 const Certifications = () => {
   const ref = useRef<HTMLDivElement>(null);
-  const [selected, setSelected] = useState<Cert | null>(null);
+  const [selected, setSelected] = useState<CertData | null>(null);
 
   useEffect(() => {
     const cards = ref.current?.querySelectorAll(".cert-card");
