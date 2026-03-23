@@ -10,10 +10,21 @@ import certFoundations from "@/assets/cert-cloud-foundations.jpg";
 import certCloudServices from "@/assets/cert-cloud-services.jpg";
 import certCpp from "@/assets/cert-cpp-gdsc.png";
 import certEfset from "@/assets/cert-efset.png";
+import certEfsetEnglish from "@/assets/cert-efset-english.jpg";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const certs = [
+interface CertData {
+  title: string;
+  org: string;
+  year: string;
+  image: string;
+  score?: string;
+  level?: string;
+  skills?: string[];
+}
+
+const certs: CertData[] = [
   { title: "HCCDA Tech Essentials", org: "Huawei", year: "2025", image: certHccda },
   { title: "Programming using Python", org: "NTI", year: "2025", image: certPython },
   { title: "AWS Academy Cloud Architecting", org: "AWS Academy", year: "2025", image: certArchitecting },
@@ -21,13 +32,20 @@ const certs = [
   { title: "Cloud Services Management & Operation", org: "NTI", year: "2025", image: certCloudServices },
   { title: "Programming using C++", org: "GDSC", year: "2024", image: certCpp },
   { title: "SmallTalk English Speaking Level Test Certificate (B2 – Upper-Intermediate)", org: "SmallTalk", year: "2021", image: certEfset },
+  {
+    title: "EF SET English Certificate (B2)",
+    org: "EF SET",
+    year: "2021",
+    image: certEfsetEnglish,
+    score: "55/100",
+    level: "B2 Upper Intermediate",
+    skills: ["Reading (C1)", "Listening (B1)"],
+  },
 ];
-
-type Cert = (typeof certs)[number];
 
 const Certifications = () => {
   const ref = useRef<HTMLDivElement>(null);
-  const [selected, setSelected] = useState<Cert | null>(null);
+  const [selected, setSelected] = useState<CertData | null>(null);
 
   useEffect(() => {
     const cards = ref.current?.querySelectorAll(".cert-card");
@@ -73,6 +91,25 @@ const Certifications = () => {
               </div>
               <div className="p-4">
                 <h3 className="text-sm font-semibold text-foreground leading-tight">{cert.title}</h3>
+                {cert.level && (
+                  <span className="inline-block mt-2 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase bg-primary/20 text-primary border border-primary/30">
+                    {cert.level}
+                  </span>
+                )}
+                {cert.score && (
+                  <p className="mt-1.5 font-mono-data text-xs text-foreground/80">
+                    Score: <span className="text-primary font-semibold">{cert.score}</span>
+                  </p>
+                )}
+                {cert.skills && cert.skills.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {cert.skills.map((skill) => (
+                      <span key={skill} className="px-2 py-0.5 rounded text-[10px] font-mono-data bg-muted text-muted-foreground">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 <div className="flex items-center justify-between mt-2">
                   <span className="font-mono-data text-xs text-primary">{cert.org}</span>
                   <span className="font-mono-data text-xs text-muted-foreground">{cert.year}</span>
