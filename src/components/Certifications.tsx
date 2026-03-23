@@ -22,6 +22,7 @@ interface CertData {
   score?: string;
   level?: string;
   skills?: string[];
+  description?: string;
 }
 
 const certs: CertData[] = [
