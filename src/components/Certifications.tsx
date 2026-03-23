@@ -31,11 +31,11 @@ const certs: CertData[] = [
   { title: "AWS Academy Cloud Foundations", org: "AWS Academy", year: "2025", image: certFoundations },
   { title: "Cloud Services Management & Operation", org: "NTI", year: "2025", image: certCloudServices },
   { title: "Programming using C++", org: "GDSC", year: "2024", image: certCpp },
-  { title: "SmallTalk English Speaking Level Test Certificate (B2 – Upper-Intermediate)", org: "SmallTalk", year: "2021", image: certEfset },
+  { title: "SmallTalk English Speaking Level Test Certificate (B2 – Upper-Intermediate)", org: "SmallTalk", year: "2024", image: certEfset },
   {
     title: "EF SET English Certificate (B2)",
     org: "EF SET",
-    year: "2021",
+    year: "2024",
     image: certEfsetEnglish,
     score: "55/100",
     level: "B2 Upper Intermediate",
