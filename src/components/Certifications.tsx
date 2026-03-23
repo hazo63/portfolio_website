@@ -32,13 +32,6 @@ const certs: CertData[] = [
   { title: "Cloud Services Management & Operation", org: "NTI", year: "2025", image: certCloudServices },
   { title: "Programming using C++", org: "GDSC", year: "2024", image: certCpp },
   { title: "SmallTalk English Speaking Level Test Certificate (B2 – Upper-Intermediate)", org: "SmallTalk", year: "2024", image: certEfset },
-  {
-    title: "EF SET English Certificate (B2)",
-    org: "EF SET",
-    year: "2021",
-    image: certEfsetEnglish,
-    level: "B2 Upper Intermediate",
-  },
 ];
 
 const Certifications = () => {
