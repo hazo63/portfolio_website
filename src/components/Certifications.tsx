@@ -10,7 +10,7 @@ import certFoundations from "@/assets/cert-cloud-foundations.jpg";
 import certCloudServices from "@/assets/cert-cloud-services.jpg";
 import certCpp from "@/assets/cert-cpp-gdsc.png";
 import certEfset from "@/assets/cert-efset.png";
-
+import certEfsetEnglish from "@/assets/cert-efset-english.jpg";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -22,6 +22,7 @@ interface CertData {
   score?: string;
   level?: string;
   skills?: string[];
+  description?: string;
 }
 
 const certs: CertData[] = [
@@ -32,6 +33,14 @@ const certs: CertData[] = [
   { title: "Cloud Services Management & Operation", org: "NTI", year: "2025", image: certCloudServices },
   { title: "Programming using C++", org: "GDSC", year: "2024", image: certCpp },
   { title: "SmallTalk English Speaking Level Test Certificate (B2 – Upper-Intermediate)", org: "SmallTalk", year: "2024", image: certEfset },
+  {
+    title: "EF SET English Certificate (B2)",
+    org: "EF SET",
+    year: "May 2021",
+    image: certEfsetEnglish,
+    level: "B2 Upper Intermediate",
+    description: "Demonstrates strong English proficiency with the ability to communicate effectively in academic and professional environments.",
+  },
 ];
 
 const Certifications = () => {
@@ -82,6 +91,9 @@ const Certifications = () => {
               </div>
               <div className="p-4">
                 <h3 className="text-sm font-semibold text-foreground leading-tight">{cert.title}</h3>
+                {cert.description && (
+                  <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed line-clamp-2">{cert.description}</p>
+                )}
                 {cert.level && (
                   <span className="inline-block mt-2 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase bg-primary/20 text-primary border border-primary/30">
                     {cert.level}
