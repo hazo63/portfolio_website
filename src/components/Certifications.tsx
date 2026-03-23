@@ -91,6 +91,25 @@ const Certifications = () => {
               </div>
               <div className="p-4">
                 <h3 className="text-sm font-semibold text-foreground leading-tight">{cert.title}</h3>
+                {cert.level && (
+                  <span className="inline-block mt-2 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase bg-primary/20 text-primary border border-primary/30">
+                    {cert.level}
+                  </span>
+                )}
+                {cert.score && (
+                  <p className="mt-1.5 font-mono-data text-xs text-foreground/80">
+                    Score: <span className="text-primary font-semibold">{cert.score}</span>
+                  </p>
+                )}
+                {cert.skills && cert.skills.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {cert.skills.map((skill) => (
+                      <span key={skill} className="px-2 py-0.5 rounded text-[10px] font-mono-data bg-muted text-muted-foreground">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 <div className="flex items-center justify-between mt-2">
                   <span className="font-mono-data text-xs text-primary">{cert.org}</span>
                   <span className="font-mono-data text-xs text-muted-foreground">{cert.year}</span>
