@@ -10,10 +10,21 @@ import certFoundations from "@/assets/cert-cloud-foundations.jpg";
 import certCloudServices from "@/assets/cert-cloud-services.jpg";
 import certCpp from "@/assets/cert-cpp-gdsc.png";
 import certEfset from "@/assets/cert-efset.png";
+import certEfsetEnglish from "@/assets/cert-efset-english.jpg";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const certs = [
+interface CertData {
+  title: string;
+  org: string;
+  year: string;
+  image: string;
+  score?: string;
+  level?: string;
+  skills?: string[];
+}
+
+const certs: CertData[] = [
   { title: "HCCDA Tech Essentials", org: "Huawei", year: "2025", image: certHccda },
   { title: "Programming using Python", org: "NTI", year: "2025", image: certPython },
   { title: "AWS Academy Cloud Architecting", org: "AWS Academy", year: "2025", image: certArchitecting },
@@ -21,9 +32,16 @@ const certs = [
   { title: "Cloud Services Management & Operation", org: "NTI", year: "2025", image: certCloudServices },
   { title: "Programming using C++", org: "GDSC", year: "2024", image: certCpp },
   { title: "SmallTalk English Speaking Level Test Certificate (B2 – Upper-Intermediate)", org: "SmallTalk", year: "2021", image: certEfset },
+  {
+    title: "EF SET English Certificate (B2)",
+    org: "EF SET",
+    year: "2021",
+    image: certEfsetEnglish,
+    score: "55/100",
+    level: "B2 Upper Intermediate",
+    skills: ["Reading (C1)", "Listening (B1)"],
+  },
 ];
-
-type Cert = (typeof certs)[number];
 
 const Certifications = () => {
   const ref = useRef<HTMLDivElement>(null);
