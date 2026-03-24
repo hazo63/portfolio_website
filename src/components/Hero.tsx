@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import ParticleCanvas from "./ParticleCanvas";
 
 const Hero = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
