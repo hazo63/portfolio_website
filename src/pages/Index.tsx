@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import Preloader from "@/components/Preloader";
 import AnimatedBackground from "@/components/AnimatedBackground";
+import FuturisticCursor from "@/components/FuturisticCursor";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
