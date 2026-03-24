@@ -54,8 +54,6 @@ const Hero = () => {
         <div className="absolute inset-0 bg-background/40" />
       </div>
 
-      <ParticleCanvas />
-
       {/* Content */}
       <div className="relative z-20 text-center section-container pt-16">
         <p className="hero-title font-mono-data text-xs text-primary mb-4 uppercase">
