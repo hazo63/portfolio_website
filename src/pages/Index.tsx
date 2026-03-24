@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import Preloader from "@/components/Preloader";
+import AnimatedBackground from "@/components/AnimatedBackground";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -20,7 +21,8 @@ const Index = () => {
   return (
     <>
       {loading && <Preloader onComplete={handleLoadComplete} />}
-      <div className={loading ? "opacity-0" : "opacity-100 transition-opacity duration-500"}>
+      <AnimatedBackground />
+      <div className={`relative z-10 ${loading ? "opacity-0" : "opacity-100 transition-opacity duration-500"}`}>
         <Navbar />
         <Hero />
         <About />

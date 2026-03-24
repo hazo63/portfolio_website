@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import ParticleCanvas from "./ParticleCanvas";
 
 const Hero = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -54,8 +53,6 @@ const Hero = () => {
         <div className="absolute inset-0 gradient-overlay" />
         <div className="absolute inset-0 bg-background/40" />
       </div>
-
-      <ParticleCanvas />
 
       {/* Content */}
       <div className="relative z-20 text-center section-container pt-16">
