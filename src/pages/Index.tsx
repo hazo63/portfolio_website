@@ -23,6 +23,7 @@ const Index = () => {
     <>
       {loading && <Preloader onComplete={handleLoadComplete} />}
       <AnimatedBackground />
+      <FuturisticCursor />
       <div className={`relative z-10 ${loading ? "opacity-0" : "opacity-100 transition-opacity duration-500"}`}>
         <Navbar />
         <Hero />
