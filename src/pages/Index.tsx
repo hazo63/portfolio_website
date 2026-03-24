@@ -21,7 +21,8 @@ const Index = () => {
   return (
     <>
       {loading && <Preloader onComplete={handleLoadComplete} />}
-      <div className={loading ? "opacity-0" : "opacity-100 transition-opacity duration-500"}>
+      <AnimatedBackground />
+      <div className={`relative z-10 ${loading ? "opacity-0" : "opacity-100 transition-opacity duration-500"}`}>
         <Navbar />
         <Hero />
         <About />
