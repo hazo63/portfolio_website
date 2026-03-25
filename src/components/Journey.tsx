@@ -87,7 +87,7 @@ const Journey = () => {
                 }`}
               >
                 <div className={`flex-1 ${i % 2 === 0 ? "md:text-right" : "md:text-left"}`}>
-                  <div className="glass-card glow-border p-6">
+                  <div className="glass-card-hover glow-border p-6">
                     <h3 className="text-lg font-semibold text-foreground">{exp.title}</h3>
                     <p className="font-mono-data text-xs text-primary mt-1">{exp.company}</p>
                     <ul className="mt-3 space-y-1">

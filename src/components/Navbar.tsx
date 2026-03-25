@@ -83,11 +83,7 @@ const Navbar = () => {
                 <button
                   key={item.href}
                   onClick={() => handleClick(item.href)}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-ring ${
-                    isActive
-                      ? "text-primary glow-shadow bg-primary/10"
-                      : "text-muted-foreground hover:text-primary hover:bg-primary/5"
-                  }`}
+                  className={`nav-link focus:outline-none focus:ring-2 focus:ring-ring ${isActive ? "active" : ""}`}
                 >
                   <Icon size={16} weight={isActive ? "fill" : "regular"} />
                   {item.label}
@@ -139,11 +135,7 @@ const Navbar = () => {
                 <button
                   key={item.href}
                   onClick={() => handleClick(item.href)}
-                  className={`flex items-center gap-3 px-6 py-3 rounded-xl text-lg font-medium transition-all duration-300 w-64 ${
-                    isActive
-                      ? "text-primary glow-shadow bg-primary/10"
-                      : "text-muted-foreground hover:text-primary hover:bg-primary/5"
-                  }`}
+                  className={`nav-link w-64 text-lg font-medium rounded-xl px-6 py-3 gap-3 ${isActive ? "active" : ""}`}
                 >
                   <Icon size={22} weight={isActive ? "fill" : "regular"} />
                   {item.label}

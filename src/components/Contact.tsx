@@ -65,19 +65,19 @@ const Contact = () => {
               type="text"
               placeholder="Name"
               required
-              className="contact-input w-full bg-surface border border-foreground/[0.08] rounded-lg px-4 py-3 text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all"
+              className="contact-input diamond-input"
             />
             <input
               type="email"
               placeholder="Email"
               required
-              className="contact-input w-full bg-surface border border-foreground/[0.08] rounded-lg px-4 py-3 text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all"
+              className="contact-input diamond-input"
             />
             <textarea
               placeholder="Message"
               rows={4}
               required
-              className="contact-input w-full bg-surface border border-foreground/[0.08] rounded-lg px-4 py-3 text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all resize-none"
+              className="contact-input diamond-input resize-none"
             />
             <button
               type="submit"
@@ -94,7 +94,7 @@ const Contact = () => {
                 href="https://www.linkedin.com/in/mohamed-hazem-hegazy-6197b8262"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="contact-social flex items-center gap-2 text-muted-foreground hover:text-primary hover:scale-105 transition-all duration-300"
+                className="contact-social social-link"
               >
                 <LinkedinLogo size={24} weight="regular" />
                 <span className="text-sm">Mohamed Hazem</span>
@@ -103,7 +103,7 @@ const Contact = () => {
                 href="https://github.com/hazo63"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="contact-social flex items-center gap-2 text-muted-foreground hover:text-primary hover:scale-105 transition-all duration-300"
+                className="contact-social social-link"
               >
                 <GithubLogo size={24} weight="regular" />
                 <span className="text-sm">hazo63</span>
@@ -111,7 +111,7 @@ const Contact = () => {
             </div>
             <a
               href="mailto:mdmdss1212@gmail.com"
-              className="contact-social flex items-center gap-2 text-muted-foreground hover:text-primary hover:scale-105 transition-all duration-300"
+              className="contact-social social-link"
             >
               <EnvelopeSimple size={24} weight="regular" />
               <span className="text-sm">mdmdss1212@gmail.com</span>
@@ -125,7 +125,7 @@ const Contact = () => {
             href={resumeHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-outline-glow flex items-center gap-2 px-8 py-4 rounded-xl text-base font-semibold hover:scale-105 active:scale-95 transition-transform w-full sm:w-auto justify-center"
+            className="btn-outline-glow flex items-center gap-2 px-8 py-4 rounded-xl text-base font-semibold w-full sm:w-auto justify-center"
           >
             <DownloadSimple size={22} weight="bold" />
             Download CV
