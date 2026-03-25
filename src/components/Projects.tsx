@@ -88,13 +88,13 @@ const Projects = () => {
               <div
                 key={p.title}
                 onClick={() => setSelected(p)}
-                className="project-card glass-card glow-border overflow-hidden cursor-pointer group"
+                className="project-card glass-card-hover glow-border overflow-hidden cursor-pointer group"
               >
                 <div className="aspect-video overflow-hidden relative">
                   <img
                     src={p.image}
                     alt={p.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 group-hover:brightness-110"
+                    className="w-full h-full object-cover hover-image"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
                 </div>

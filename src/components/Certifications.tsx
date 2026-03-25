@@ -79,13 +79,13 @@ const Certifications = () => {
             <button
               key={cert.title}
               onClick={() => setSelected(cert)}
-              className="cert-card glass-card glow-border overflow-hidden rounded-xl text-left group hover:glow-shadow transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-ring"
+              className="cert-card glass-card-hover glow-border overflow-hidden rounded-xl text-left group focus:outline-none focus:ring-2 focus:ring-ring"
             >
               <div className="relative w-full aspect-[16/10] overflow-hidden bg-background/50">
                 <img
                   src={cert.image}
                   alt={cert.title}
-                  className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-full object-contain hover-image"
                   loading="lazy"
                 />
               </div>

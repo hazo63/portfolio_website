@@ -58,12 +58,38 @@
 }
 
 @layer components {
+  /* ─── Base Cards ─── */
   .glass-card {
     @apply bg-card/40 backdrop-blur-xl border border-foreground/[0.08] rounded-xl;
+    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                box-shadow 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                border-color 0.35s ease;
+  }
+
+  .glass-card-hover {
+    @apply bg-card/40 backdrop-blur-xl border border-foreground/[0.08] rounded-xl;
+    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                box-shadow 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                border-color 0.35s ease;
+  }
+
+  .glass-card-hover:hover {
+    transform: translateY(-6px);
+    border-color: hsl(var(--primary) / 0.4);
+    box-shadow: 0 8px 32px hsl(var(--primary) / 0.08), 0 0 0 1px hsl(var(--primary) / 0.1);
+  }
+
+  .glass-card-hover:active {
+    transform: translateY(-2px) scale(0.98);
   }
 
   .glow-border {
-    @apply border border-primary/20 hover:border-primary/60 transition-colors duration-300;
+    @apply border border-primary/20 transition-all duration-300;
+  }
+
+  .glow-border:hover {
+    border-color: hsl(var(--primary) / 0.5);
+    box-shadow: 0 0 16px hsl(var(--primary) / 0.1);
   }
 
   .glow-shadow {
@@ -91,41 +117,137 @@
     background: linear-gradient(to bottom, transparent, hsl(var(--background)));
   }
 
+  /* ─── Buttons ─── */
   .btn-glow {
-    @apply px-6 py-3 rounded-lg font-semibold text-sm tracking-wide transition-all duration-300;
+    @apply px-6 py-3 rounded-lg font-semibold text-sm tracking-wide;
     background: hsl(var(--primary));
     color: hsl(var(--primary-foreground));
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                box-shadow 0.3s ease;
   }
 
   .btn-glow:hover {
-    box-shadow: 0 0 30px hsl(var(--primary) / 0.5);
     transform: scale(1.05);
+    box-shadow: 0 0 24px hsl(var(--primary) / 0.35), 0 4px 16px hsl(var(--primary) / 0.15);
+  }
+
+  .btn-glow:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 12px hsl(var(--primary) / 0.2);
   }
 
   .btn-outline-glow {
-    @apply px-6 py-3 rounded-lg font-semibold text-sm tracking-wide transition-all duration-300;
-    border: 1px solid hsl(var(--primary) / 0.5);
+    @apply px-6 py-3 rounded-lg font-semibold text-sm tracking-wide;
+    border: 1px solid hsl(var(--primary) / 0.4);
     color: hsl(var(--primary));
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                box-shadow 0.3s ease,
+                background-color 0.3s ease,
+                border-color 0.3s ease;
   }
 
   .btn-outline-glow:hover {
-    background: hsl(var(--primary) / 0.1);
-    box-shadow: 0 0 20px hsl(var(--primary) / 0.2);
+    transform: scale(1.05);
+    background: hsl(var(--primary) / 0.08);
+    border-color: hsl(var(--primary) / 0.6);
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.15);
   }
 
+  .btn-outline-glow:active {
+    transform: scale(0.95);
+  }
+
+  /* ─── Skill Tags ─── */
   .skill-tag {
-    @apply px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 cursor-default;
+    @apply px-4 py-2 rounded-md text-sm font-medium cursor-default;
     background: hsl(var(--surface));
     border: 1px solid hsl(var(--primary) / 0.15);
     color: hsl(var(--foreground) / 0.9);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease, transform 0.3s ease;
   }
 
   .skill-tag:hover {
-    border-color: hsl(var(--primary) / 0.6);
-    box-shadow: 0 0 15px hsl(var(--primary) / 0.2);
+    border-color: hsl(var(--primary) / 0.5);
+    box-shadow: 0 0 12px hsl(var(--primary) / 0.12);
+    color: hsl(var(--primary));
+    transform: translateY(-2px);
+  }
+
+  /* ─── Links ─── */
+  .hover-link {
+    @apply relative inline-block;
+    color: hsl(var(--muted-foreground));
+    transition: color 0.3s ease;
+  }
+
+  .hover-link::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-full h-px;
+    background: hsl(var(--primary));
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .hover-link:hover {
     color: hsl(var(--primary));
   }
 
+  .hover-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  /* ─── Images in Cards ─── */
+  .hover-image {
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.5s ease;
+  }
+
+  .hover-image:hover,
+  .group:hover .hover-image {
+    transform: scale(1.03);
+    filter: brightness(1.08);
+  }
+
+  /* ─── Input Fields ─── */
+  .diamond-input {
+    @apply w-full rounded-lg px-4 py-3 text-sm placeholder-muted-foreground;
+    background: hsl(var(--surface));
+    color: hsl(var(--foreground));
+    border: 1px solid hsl(var(--foreground) / 0.08);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  }
+
+  .diamond-input:hover {
+    border-color: hsl(var(--primary) / 0.3);
+  }
+
+  .diamond-input:focus {
+    outline: none;
+    border-color: hsl(var(--primary) / 0.5);
+    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.08), 0 0 16px hsl(var(--primary) / 0.06);
+    background: hsl(var(--surface) / 0.8);
+  }
+
+  /* ─── Nav Links ─── */
+  .nav-link {
+    @apply flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm;
+    color: hsl(var(--muted-foreground));
+    transition: color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .nav-link:hover {
+    color: hsl(var(--primary));
+    background: hsl(var(--primary) / 0.06);
+  }
+
+  .nav-link.active {
+    color: hsl(var(--primary));
+    background: hsl(var(--primary) / 0.1);
+    box-shadow: 0 0 16px hsl(var(--primary) / 0.1);
+  }
+
+  /* ─── Timeline ─── */
   .timeline-line {
     background: linear-gradient(to bottom, hsl(var(--primary) / 0.1), hsl(var(--primary) / 0.6), hsl(var(--primary) / 0.1));
   }
@@ -134,5 +256,17 @@
     @apply w-4 h-4 rounded-full;
     background: hsl(var(--primary));
     box-shadow: 0 0 12px hsl(var(--primary) / 0.6);
+  }
+
+  /* ─── Social Links ─── */
+  .social-link {
+    @apply flex items-center gap-2 text-sm;
+    color: hsl(var(--muted-foreground));
+    transition: color 0.3s ease, transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .social-link:hover {
+    color: hsl(var(--primary));
+    transform: translateY(-2px);
   }
 }
