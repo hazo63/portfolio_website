@@ -66,10 +66,7 @@ const Hero = () => {
           Building Scalable Data Pipelines & Cloud Solutions
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
-          <a href="#projects" className="hero-cta btn-glow">
-            View Projects
-          </a>
-          <a href="#contact" className="hero-cta btn-outline-glow">
+          <a href="#contact" className="hero-cta btn-glow">
             Contact Me
           </a>
         </div>
