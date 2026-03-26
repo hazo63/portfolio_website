@@ -63,15 +63,24 @@ const Projects = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".project-card", {
-        scrollTrigger: { trigger: ref.current, start: "top bottom-=100", toggleActions: "play none none reverse" },
-        opacity: 0,
-        y: 50,
-        scale: 0.95,
-        duration: 0.8,
-        stagger: 0.12,
-        ease: "power3.out",
-      });
+      const cards = ref.current?.querySelectorAll(".project-card");
+      if (cards && cards.length > 0) {
+        gsap.set(cards, { opacity: 0, y: 50, scale: 0.95 });
+        ScrollTrigger.create({
+          trigger: ref.current,
+          start: "top bottom-=50",
+          onEnter: () => {
+            gsap.to(cards, {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.8,
+              stagger: 0.12,
+              ease: "power3.out",
+            });
+          },
+        });
+      }
     }, ref);
     return () => ctx.revert();
   }, []);
