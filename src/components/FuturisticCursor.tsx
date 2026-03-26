@@ -1,16 +1,22 @@
 import { useEffect, useRef, useCallback } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-interface Node {
-  ox: number; oy: number; // offset from center (-1 to 1 range)
-  phase: number; speed: number;
+interface OrbitDot {
+  angle: number;
+  speed: number;
+  baseRadius: number;
   radius: number;
+  size: number;
+  opacity: number;
+  phase: number;
 }
 
 interface ClickEffect {
-  x: number; y: number; age: number;
-  rippleRadius: number; rippleOpacity: number;
-  nodeGlow: number;
+  age: number;
+  burstProgress: number; // 0→1 burst, then 1→0 return
+  phase: "burst" | "return";
+  rippleRadius: number;
+  rippleOpacity: number;
 }
 
 const FuturisticCursor = () => {
@@ -19,29 +25,30 @@ const FuturisticCursor = () => {
   const animRef = useRef(0);
   const mouse = useRef({ x: -100, y: -100, active: false });
   const smooth = useRef({ x: -100, y: -100 });
-  const clicks = useRef<ClickEffect[]>([]);
+  const clickFx = useRef<ClickEffect | null>(null);
   const state = useRef({
     scale: 1, targetScale: 1,
     glow: 0.5, targetGlow: 0.5,
-    breath: 0, compress: 0,
+    orbitSpeed: 1, targetOrbitSpeed: 1,
+    breath: 0,
   });
   const hovering = useRef<"none" | "button" | "link" | "card">("none");
-  const trailDots = useRef<{ x: number; y: number; opacity: number }[]>([]);
-  const lastTrail = useRef(0);
 
-  // 4 data nodes inside diamond
-  const nodes = useRef<Node[]>([
-    { ox: 0, oy: -0.45, phase: 0, speed: 0.008, radius: 1.8 },
-    { ox: 0.4, oy: 0.1, phase: 1.5, speed: 0.012, radius: 1.5 },
-    { ox: -0.35, oy: 0.2, phase: 3.0, speed: 0.01, radius: 1.6 },
-    { ox: 0.05, oy: 0.4, phase: 4.5, speed: 0.009, radius: 1.4 },
+  const dots = useRef<OrbitDot[]>([
+    { angle: 0, speed: 0.018, baseRadius: 22, radius: 22, size: 2.2, opacity: 0.8, phase: 0 },
+    { angle: Math.PI * 0.5, speed: 0.022, baseRadius: 24, radius: 24, size: 1.8, opacity: 0.65, phase: 1 },
+    { angle: Math.PI, speed: 0.015, baseRadius: 20, radius: 20, size: 2.0, opacity: 0.75, phase: 2 },
+    { angle: Math.PI * 1.5, speed: 0.02, baseRadius: 23, radius: 23, size: 1.6, opacity: 0.6, phase: 3 },
   ]);
 
-  // Connections between nodes (indices)
-  const edges = useRef([[0, 1], [0, 2], [1, 3], [2, 3]]);
-
-  const spawnClick = useCallback((x: number, y: number) => {
-    clicks.current.push({ x, y, age: 0, rippleRadius: 0, rippleOpacity: 0.3, nodeGlow: 1 });
+  const spawnClick = useCallback(() => {
+    clickFx.current = { age: 0, burstProgress: 0, phase: "burst", rippleRadius: 0, rippleOpacity: 0.25 };
+    state.current.targetScale = 0.88;
+    state.current.targetGlow = 1;
+    setTimeout(() => {
+      state.current.targetScale = hovering.current === "button" ? 1.1 : 1;
+      state.current.targetGlow = hovering.current === "button" ? 0.75 : 0.5;
+    }, 120);
   }, []);
 
   useEffect(() => {
@@ -73,28 +80,18 @@ const FuturisticCursor = () => {
       mouse.current.active = true;
     };
     const onLeave = () => { mouse.current.active = false; };
-    const onClick = () => {
-      spawnClick(smooth.current.x, smooth.current.y);
-      state.current.compress = 1;
-      state.current.targetScale = 0.88;
-      state.current.targetGlow = 1;
-      setTimeout(() => {
-        state.current.compress = 0;
-        state.current.targetScale = hovering.current === "button" ? 1.08 : 1;
-        state.current.targetGlow = hovering.current === "button" ? 0.7 : 0.5;
-      }, 120);
-    };
+    const onClick = () => { spawnClick(); };
     const onHover = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       const s = state.current;
       if (target.closest("button, [role='button'], .btn-glow, .btn-outline-glow")) {
-        hovering.current = "button"; s.targetScale = 1.08; s.targetGlow = 0.7;
+        hovering.current = "button"; s.targetScale = 1.1; s.targetGlow = 0.75; s.targetOrbitSpeed = 1.6;
       } else if (target.closest("a")) {
-        hovering.current = "link"; s.targetScale = 1.04; s.targetGlow = 0.65;
+        hovering.current = "link"; s.targetScale = 1.05; s.targetGlow = 0.65; s.targetOrbitSpeed = 1.2;
       } else if (target.closest(".glass-card, .card, img")) {
-        hovering.current = "card"; s.targetScale = 1.02; s.targetGlow = 0.6;
+        hovering.current = "card"; s.targetScale = 1.03; s.targetGlow = 0.6; s.targetOrbitSpeed = 1.1;
       } else {
-        hovering.current = "none"; s.targetScale = 1; s.targetGlow = 0.5;
+        hovering.current = "none"; s.targetScale = 1; s.targetGlow = 0.5; s.targetOrbitSpeed = 1;
       }
     };
 
@@ -103,7 +100,57 @@ const FuturisticCursor = () => {
     window.addEventListener("click", onClick);
     window.addEventListener("mouseover", onHover);
 
-    const DIAMOND_SIZE = 16; // half-diagonal
+    const drawArrow = (ctx: CanvasRenderingContext2D, cx: number, cy: number, scale: number, glow: number) => {
+      ctx.save();
+      ctx.translate(cx, cy);
+      const s = scale * 0.9;
+
+      // Arrow path — sharp geometric triangle
+      const ax = 0 * s, ay = 0 * s;
+      const bx = -8 * s, by = 22 * s;
+      const cx2 = -2.5 * s, cy2 = 17 * s;
+      const dx = -2.5 * s, dy = 28 * s;
+      const ex = 3.5 * s, ey = 20 * s;
+      const fx = 12 * s, fy = 14 * s;
+
+      // Outer glow
+      ctx.shadowColor = `hsla(195, 85%, 60%, ${0.4 * glow})`;
+      ctx.shadowBlur = 12 * glow;
+
+      // Fill gradient
+      const grad = ctx.createLinearGradient(ax, ay, dx, dy);
+      grad.addColorStop(0, `hsla(200, 80%, 70%, ${0.35 * glow})`);
+      grad.addColorStop(0.5, `hsla(210, 70%, 55%, ${0.25 * glow})`);
+      grad.addColorStop(1, `hsla(230, 60%, 45%, ${0.15 * glow})`);
+
+      ctx.beginPath();
+      ctx.moveTo(ax, ay);
+      ctx.lineTo(fx, fy);
+      ctx.lineTo(ex, ey);
+      ctx.lineTo(dx, dy);
+      ctx.lineTo(cx2, cy2);
+      ctx.lineTo(bx, by);
+      ctx.closePath();
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      // Outline
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = `hsla(195, 75%, 65%, ${0.5 * glow})`;
+      ctx.lineWidth = 1.2;
+      ctx.lineJoin = "round";
+      ctx.stroke();
+
+      // Inner highlight line
+      ctx.beginPath();
+      ctx.moveTo(ax, ay + 2 * s);
+      ctx.lineTo(-1 * s, 12 * s);
+      ctx.strokeStyle = `hsla(195, 90%, 80%, ${0.2 * glow})`;
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+
+      ctx.restore();
+    };
 
     const animate = () => {
       const w = window.innerWidth, h = window.innerHeight;
@@ -113,14 +160,14 @@ const FuturisticCursor = () => {
       const s = state.current;
 
       // Smooth follow
-      sm.x += (m.x - sm.x) * 0.15;
-      sm.y += (m.y - sm.y) * 0.15;
+      sm.x += (m.x - sm.x) * 0.14;
+      sm.y += (m.y - sm.y) * 0.14;
 
       // Lerp state
-      s.scale += (s.targetScale - s.scale) * 0.1;
+      s.scale += (s.targetScale - s.scale) * 0.12;
       s.glow += (s.targetGlow - s.glow) * 0.08;
-      s.breath += 0.02;
-      const breathVal = Math.sin(s.breath) * 0.04 + 0.96;
+      s.orbitSpeed += (s.targetOrbitSpeed - s.orbitSpeed) * 0.06;
+      s.breath += 0.025;
 
       if (!m.active) {
         animRef.current = requestAnimationFrame(animate);
@@ -128,124 +175,87 @@ const FuturisticCursor = () => {
       }
 
       const cx = sm.x, cy = sm.y;
-      const size = DIAMOND_SIZE * s.scale * breathVal;
 
-      // Subtle trail dots
-      const now = performance.now();
-      if (now - lastTrail.current > 60) {
-        lastTrail.current = now;
-        trailDots.current.push({ x: cx, y: cy, opacity: 0.15 });
-        if (trailDots.current.length > 12) trailDots.current.shift();
-      }
-      for (let i = trailDots.current.length - 1; i >= 0; i--) {
-        const d = trailDots.current[i];
-        d.opacity -= 0.008;
-        if (d.opacity <= 0) { trailDots.current.splice(i, 1); continue; }
-        ctx.beginPath();
-        ctx.arc(d.x, d.y, 1.2 * d.opacity * 4, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(220, 50%, 70%, ${d.opacity})`;
-        ctx.fill();
-      }
-
-      // Card halo
-      if (hovering.current === "card") {
-        const hGrd = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 2.5);
-        hGrd.addColorStop(0, "hsla(220, 70%, 65%, 0.035)");
-        hGrd.addColorStop(1, "transparent");
-        ctx.fillStyle = hGrd;
-        ctx.beginPath();
-        ctx.arc(cx, cy, size * 2.5, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // Outer glow
-      const glowSize = size * 1.8;
-      const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, glowSize);
-      grd.addColorStop(0, `hsla(220, 70%, 70%, ${0.08 * s.glow})`);
-      grd.addColorStop(0.6, `hsla(260, 50%, 60%, ${0.03 * s.glow})`);
-      grd.addColorStop(1, "transparent");
-      ctx.fillStyle = grd;
-      ctx.fillRect(cx - glowSize, cy - glowSize, glowSize * 2, glowSize * 2);
-
-      // Diamond shape (rotated 45°)
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.rotate(Math.PI / 4);
-
-      // Diamond fill (glassmorphism)
-      const dSize = size * 0.85;
-      ctx.beginPath();
-      ctx.rect(-dSize, -dSize, dSize * 2, dSize * 2);
-      const fillGrd = ctx.createLinearGradient(-dSize, -dSize, dSize, dSize);
-      fillGrd.addColorStop(0, `hsla(220, 60%, 65%, ${0.06 * s.glow})`);
-      fillGrd.addColorStop(1, `hsla(260, 50%, 55%, ${0.04 * s.glow})`);
-      ctx.fillStyle = fillGrd;
-      ctx.fill();
-
-      // Diamond outline
-      ctx.strokeStyle = `hsla(220, 60%, 70%, ${0.25 * s.glow})`;
-      ctx.lineWidth = 1;
-      ctx.stroke();
-
-      // Data nodes & edges (drawn in rotated space, so they appear inside diamond)
-      // But node positions need to counter-rotate to stay "upright" feeling
-      const nodePositions: { x: number; y: number }[] = [];
-      const clickGlow = clicks.current.length > 0 ? clicks.current[0].nodeGlow * 0.3 : 0;
-
-      for (const n of nodes.current) {
-        n.phase += n.speed;
-        const jx = Math.sin(n.phase) * 1.5;
-        const jy = Math.cos(n.phase * 0.7 + 1) * 1.5;
-        const nx = n.ox * dSize * 0.7 + jx;
-        const ny = n.oy * dSize * 0.7 + jy;
-        nodePositions.push({ x: nx, y: ny });
-      }
-
-      // Draw edges
-      ctx.lineWidth = 0.6;
-      for (const [a, b] of edges.current) {
-        const pa = nodePositions[a], pb = nodePositions[b];
-        ctx.beginPath();
-        ctx.moveTo(pa.x, pa.y);
-        ctx.lineTo(pb.x, pb.y);
-        ctx.strokeStyle = `hsla(220, 50%, 70%, ${0.15 + clickGlow})`;
-        ctx.stroke();
-      }
-
-      // Draw nodes
-      for (const p of nodePositions) {
-        const baseAlpha = 0.5 + clickGlow;
-        const nodeGrd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 2.5);
-        nodeGrd.addColorStop(0, `hsla(210, 80%, 80%, ${baseAlpha})`);
-        nodeGrd.addColorStop(1, `hsla(250, 60%, 65%, ${baseAlpha * 0.3})`);
-        ctx.fillStyle = nodeGrd;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 1.8, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      ctx.restore();
-
-      // Click effects
-      for (let ci = clicks.current.length - 1; ci >= 0; ci--) {
-        const c = clicks.current[ci];
-        c.age++;
-        c.rippleRadius += 2;
-        c.rippleOpacity -= 0.008;
-        c.nodeGlow *= 0.94;
-
-        if (c.rippleOpacity > 0) {
+      // Click effect processing
+      const cf = clickFx.current;
+      let burstMult = 1;
+      if (cf) {
+        cf.age++;
+        if (cf.phase === "burst") {
+          cf.burstProgress = Math.min(cf.burstProgress + 0.08, 1);
+          burstMult = 1 + cf.burstProgress * 0.8; // radius up to 1.8x
+          if (cf.burstProgress >= 1) { cf.phase = "return"; }
+        } else {
+          cf.burstProgress = Math.max(cf.burstProgress - 0.04, 0);
+          burstMult = 1 + cf.burstProgress * 0.8;
+          if (cf.burstProgress <= 0) { clickFx.current = null; }
+        }
+        // Ripple
+        cf.rippleRadius += 2.5;
+        cf.rippleOpacity -= 0.006;
+        if (cf.rippleOpacity > 0) {
           ctx.beginPath();
-          ctx.arc(c.x, c.y, c.rippleRadius, 0, Math.PI * 2);
-          ctx.strokeStyle = `hsla(220, 60%, 70%, ${c.rippleOpacity})`;
-          ctx.lineWidth = 0.8;
+          ctx.arc(cx, cy + 18, cf.rippleRadius, 0, Math.PI * 2);
+          ctx.strokeStyle = `hsla(195, 70%, 65%, ${cf.rippleOpacity})`;
+          ctx.lineWidth = 1;
           ctx.stroke();
         }
-
-        if (c.rippleOpacity <= 0 && c.nodeGlow < 0.01) {
-          clicks.current.splice(ci, 1);
+        // Energy ring
+        if (cf.age < 15) {
+          const ringOp = (1 - cf.age / 15) * 0.15;
+          ctx.beginPath();
+          ctx.arc(cx, cy + 18, 18 * burstMult, 0, Math.PI * 2);
+          ctx.strokeStyle = `hsla(200, 80%, 70%, ${ringOp})`;
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
         }
       }
+
+      // Orbit center is below the arrow tip
+      const orbitCx = cx, orbitCy = cy + 18;
+
+      // Draw orbit path (very faint)
+      const avgRadius = 22 * s.scale * burstMult;
+      ctx.beginPath();
+      ctx.arc(orbitCx, orbitCy, avgRadius, 0, Math.PI * 2);
+      ctx.strokeStyle = `hsla(210, 50%, 60%, ${0.06 * s.glow})`;
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+
+      // Draw orbiting dots
+      for (const dot of dots.current) {
+        dot.angle += dot.speed * s.orbitSpeed;
+        dot.radius = dot.baseRadius * s.scale * burstMult;
+        const dotScale = cf && cf.phase === "burst" ? 1 + cf.burstProgress * 0.2 : 1;
+        const dotGlow = cf && cf.phase === "burst" ? s.glow + cf.burstProgress * 0.3 : s.glow;
+
+        const dx = orbitCx + Math.cos(dot.angle) * dot.radius;
+        const dy = orbitCy + Math.sin(dot.angle) * dot.radius;
+
+        // Pulsing opacity for links
+        const pulseOp = hovering.current === "link"
+          ? dot.opacity + Math.sin(s.breath * 3 + dot.phase) * 0.15
+          : dot.opacity;
+
+        // Dot glow
+        const dGrd = ctx.createRadialGradient(dx, dy, 0, dx, dy, dot.size * 3 * dotScale);
+        dGrd.addColorStop(0, `hsla(195, 85%, 75%, ${pulseOp * dotGlow})`);
+        dGrd.addColorStop(0.5, `hsla(220, 70%, 60%, ${pulseOp * dotGlow * 0.4})`);
+        dGrd.addColorStop(1, "transparent");
+        ctx.fillStyle = dGrd;
+        ctx.beginPath();
+        ctx.arc(dx, dy, dot.size * 3 * dotScale, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Dot core
+        ctx.beginPath();
+        ctx.arc(dx, dy, dot.size * dotScale, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(195, 90%, 80%, ${pulseOp * dotGlow})`;
+        ctx.fill();
+      }
+
+      // Draw the arrow cursor on top
+      drawArrow(ctx, cx, cy, s.scale, s.glow);
 
       animRef.current = requestAnimationFrame(animate);
     };
