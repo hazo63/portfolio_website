@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
+import { PaperPlaneTilt } from "@phosphor-icons/react";
 
 const Hero = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -66,8 +67,9 @@ const Hero = () => {
           Building Scalable Data Pipelines & Cloud Solutions
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
-          <a href="#contact" className="hero-cta btn-glow">
-            Contact Me
+          <a href="#contact" className="hero-cta hero-contact-btn group">
+            <PaperPlaneTilt size={18} weight="duotone" className="hero-contact-icon" />
+            <span>Contact Me</span>
           </a>
         </div>
       </div>
